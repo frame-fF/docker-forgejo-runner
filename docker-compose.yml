@@ -1,0 +1,41 @@
+services:
+  runner:
+    image: code.forgejo.org/forgejo/runner:12
+    container_name: forgejo-runner
+    restart: always
+    environment:
+      # 1. URL ของ Forgejo (ถ้าอยู่ใน Network เดียวกันใช้ชื่อ service 'forgejo' ได้เลย)
+      - FORGEJO_INSTANCE_URL=http://forgejo:3000
+      # 2. Token ที่ได้จากหน้าเว็บ (Site Admin > Actions > Runners > Create new runner)
+      - FORGEJO_RUNNER_REGISTRATION_TOKEN=${FORGEJO_RUNNER_REGISTRATION_TOKEN}
+      # 3. ชื่อ Runner ที่จะแสดงในหน้าเว็บ
+      - FORGEJO_RUNNER_NAME=my-first-runner  
+      # 4. การจับคู่ Label กับ Image (สำคัญมากสำหรับการเรียกใช้ใน Workflow)
+      # รูปแบบ: label:docker://image_name
+      # ตัวอย่าง: ถ้าใน workflow ใช้ runs-on: ubuntu-latest มันจะไปดึง node:20 มาใช้
+      - FORGEJO_RUNNER_LABELS=ubuntu-latest:docker://node:20-bookworm,docker:docker://docker:dind,python:docker://python:3.12
+    
+    entrypoint: 
+      - sh
+      - -c
+    
+    command: |
+      "if [ ! -f .runner ]; then 
+        forgejo-runner register --no-interactive --instance \"$$FORGEJO_INSTANCE_URL\" --token \"$$FORGEJO_RUNNER_REGISTRATION_TOKEN\" --name \"$$FORGEJO_RUNNER_NAME\" --labels \"$$FORGEJO_RUNNER_LABELS\"
+      fi 
+      forgejo-runner daemon"
+
+    volumes:
+      - data:/data
+      # ต้อง Mount docker.sock เพื่อให้ Runner สร้าง Container สำหรับรันงานได้
+      - /var/run/docker.sock:/var/run/docker.sock
+      
+    networks:
+      - base
+
+volumes:
+  data:
+
+networks:
+  base:
+    external: true
