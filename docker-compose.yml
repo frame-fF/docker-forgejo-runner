@@ -9,7 +9,7 @@ services:
       # 2. Token ที่ได้จากหน้าเว็บ (Site Admin > Actions > Runners > Create new runner)
       - FORGEJO_RUNNER_REGISTRATION_TOKEN=${FORGEJO_RUNNER_REGISTRATION_TOKEN}
       # 3. ชื่อ Runner ที่จะแสดงในหน้าเว็บ
-      - FORGEJO_RUNNER_NAME=my-first-runner  
+      - FORGEJO_RUNNER_NAME=runner  
       # 4. การจับคู่ Label กับ Image (สำคัญมากสำหรับการเรียกใช้ใน Workflow)
       # รูปแบบ: label:docker://image_name
       # ตัวอย่าง: ถ้าใน workflow ใช้ runs-on: ubuntu-latest มันจะไปดึง node:20 มาใช้
