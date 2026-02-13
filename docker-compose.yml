@@ -27,12 +27,10 @@ services:
       forgejo-runner daemon"
 
     volumes:
-      - data:/data
+      - ./runner-data:/data
       # ต้อง Mount docker.sock เพื่อให้ Runner สร้าง Container สำหรับรันงานได้
       - /var/run/docker.sock:/var/run/docker.sock
 
-volumes:
-  data:
 
 networks:
   default:
