@@ -2,6 +2,7 @@ services:
   runner:
     image: code.forgejo.org/forgejo/runner:12
     container_name: forgejo-runner
+    user: root
     restart: always
     environment:
       # 1. URL ของ Forgejo (ถ้าอยู่ใน Network เดียวกันใช้ชื่อ service 'forgejo' ได้เลย)
